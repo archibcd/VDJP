@@ -27,7 +27,12 @@ listdicovdomain=[]
 
 # Recuperation du chemin d'entrée du fichier Pipeline
 
-pipeline=input("Bonjour Docteur! Entrez le chemin de votre fichier pipeline SVP...\n")
+# nous allons activer le passage en paramètres
+
+pipeline= sys.argv[1]  # le code ci nous permet de faire un passage en paramètre du fichier de pipeline
+
+#pipeline=input("Bonjour Docteur! Entrez le chemin de votre fichier pipeline SVP...\n")
+
 print("Veuillez patientez svp pipeline....",pipeline)
 
 try:
@@ -54,7 +59,7 @@ try:
                   # v-domain du fichier
            vdomain=line.split('\t')[2]        # recupération de chaque résultat de la colonne VDomain
     
-           data.append(vdomain)               # nous sauvegardons tous les vDomain pour une utilisation ulterieure dans l'histogramme
+           #data.append(vdomain)               # nous sauvegardons tous les vDomain pour une utilisation ulterieure dans l'histogramme
                
                   
                 
@@ -90,7 +95,7 @@ start_time=time.time() # temps de début d'execution du programme de comptage
 for vdomain in dictionnaire:                  
   
   print(vdomain,len(dictionnaire[vdomain]))         # ecriture du vdomain et de son nombre dans le dictionnaire
-  
+  data.append((vdomain,len(dictionnaire[vdomain])))
   listvdomain.append(vdomain)                       # insertion du type du VDomain dans une liste de VDomain
   
   listdicovdomain.append(len(dictionnaire[vdomain]))  # comptage de chaque valeur du VDomain correspondant dans le dictionnaire
@@ -123,15 +128,17 @@ affichage()
 
 # Histogramme du VDomain
 def histogram():
-  
-  plt.hist(data)
+  fig, ax = plt.subplots(1,1)
+  vd, counts= zip(*data)
+  width=0.45
+  ax.bar(range(len(counts)), counts, width)
+  ax.set_xticks(range(len(counts)))
+  ax.set_xticklabels(vd,fontsize=8)
+ 
   
   plt.title('Histogram Results VQuest', fontsize=10)
-  plt.xticks(fontsize=5)
-  savehist=input("Veuillez Entrez le chemin de Sauvegarde de histogramme SVP... \n")
-
-  plt.savefig(savehist + '.png')
-  print("affichage de la fenetregraphique...cliquez ensuite sur fermer X pour continuer...") 
+ 
+  print("affichage de histogramme...cliquez ensuite sur fermer X pour continuer...") 
   plt.show()
  
 histogram()
@@ -149,12 +156,10 @@ def diagramcirculaire():
         autopct='%1.1f%%', shadow=True, startangle=90)
 
   plt.axis('equal')
-  savecirc=input("Veuillez Entrez le chemin de Sauvegarde de diagramme circulaire SVP... \n")
 
-  plt.savefig(savecirc + '.png')
 
   plt.show()
-  print("affichage de la fenetregraphique...cliquez ensuite sur fermer X pour continuer...")
+  print("affichage de diagramme circulaire...cliquez ensuite sur fermer X pour continuer...")
 diagramcirculaire()
 
 
