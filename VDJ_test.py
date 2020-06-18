@@ -233,6 +233,8 @@ def diagramcirculaire():
 
   
   print("affichage de diagramme circulaire...cliquez ensuite sur fermer X pour continuer...")
+  if not os.path.exists('VDJ_image'):
+    os.makedirs('VDJ_image')
   plt.savefig('VDJ_image'+'/'+"circulaire.png")
   #plt.show()
   
