@@ -618,11 +618,11 @@ for vdomain in dictionnaire4:
       dicovaleurj[c[0]]=c[0]
     
     for valer in dicoclej:
-      print("les valeurs sont les suivantes:",valer)
+      
 #      # ici c'est pour traiter les valeurs pour construire l'histogramme2
       for valerr in dicovaleurj:
         if valer==valerr:
-          print("les valeurs concordantes sont les suivantes:",valer)
+         
           v=v+1
           listememclej.append(valer)
 #       
