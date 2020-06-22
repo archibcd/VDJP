@@ -405,6 +405,13 @@ histogram()
 
 ##################################""""""--Traitement des sequences des V de MIXCR et VQUEST--"""""""""######################################################
 
+# fonction pour renommer mon fichier de sortie
+def renommer(vdomain):
+  vdom=str(vdomain).replace(' ', '_')
+  vdom=vdom.replace('(','_')
+  vdom=vdom.replace(')','')
+  return vdom
+
 donneconcord = []
 donnenonconcord =[]
 
@@ -424,25 +431,25 @@ for vdomain in dictionnaire3:
   # ecriture du fichier au format csv
     if not os.path.exists('VDJ_CSV'):
       os.makedirs('VDJ_CSV')
-    vq_vmix = open('VDJ_CSV'+'/'+str(vdomain)+"vq_vmix.csv", "wt")
+    vq_vmix = open('VDJ_CSV'+'/'+str(renommer(vdomain))+"vq_vmix.csv", "wt")
     vq_vmixCSV = csv.writer(vq_vmix,delimiter=";")
     vq_vmixCSV.writerow([str(vdomain)+"   nombre_sequence:          "+str(len(dictionnaire3[vdomain]))])
-    vq_vmixCSV.writerow(["V_VQUEST","V_MIXCR","SEQ_NUMBER"])
+    vq_vmixCSV.writerow(["SEQ_NUMBER","V_VQUEST","V_MIXCR"])
 
     # ecrivons l'entete des sequences qui différent
     
                 
-    vq_vmixdiff = open('VDJ_CSV'+'/'+str(vdomain)+"Vq_Vmix_diff.csv", "wt") # nous ouvrons le fichier qui contiendra les sequences non concordantes vquest mixcr
+    vq_vmixdiff = open('VDJ_CSV'+'/'+str(renommer(vdomain))+"Vq_Vmix_diff.csv", "wt") # nous ouvrons le fichier qui contiendra les sequences non concordantes vquest mixcr
 
-    vq_vmixmem = open('VDJ_CSV'+'/'+str(vdomain)+"Vq_Vmix_mem.csv", "wt")
+    vq_vmixmem = open('VDJ_CSV'+'/'+str(renommer(vdomain))+"Vq_Vmix_mem.csv", "wt")
     
     vq_vmixdiffCSV = csv.writer(vq_vmixdiff,delimiter=";")
     vq_vmixmemCSV = csv.writer(vq_vmixmem,delimiter=";")
-    vq_vmixdiffCSV.writerow(["V_VQUEST","V_MIXCR","SEQ_NUMBER"])
-    vq_vmixmemCSV.writerow(["V_VQUEST","V_MIXCR","SEQ_NUMBER"])
+    vq_vmixdiffCSV.writerow(["SEQ_NUMBER","V_VQUEST","V_MIXCR"])
+    vq_vmixmemCSV.writerow(["SEQ_NUMBER","V_VQUEST","V_MIXCR"])
     ##############################################
     for cle,valeur in (dictionnaire3[vdomain]).items():
-      vq_vmixCSV.writerow([str(valeur[1]),str(valeur[0]),str(cle)])
+      vq_vmixCSV.writerow([str(cle),str(valeur[1]),str(valeur[0])])
       
       # ecriture du fichier de données dans un format pdf
            #pdf.cell(80,3,str(k),1)
@@ -510,9 +517,9 @@ for vdomain in dictionnaire3:
       listetotalv.append(v)  # listetotalv contiendra toutes les nombres  des v concordants de mixcr-vquest
       listetotaldico.append(len(dicovaleur))
       if listdifferentcle!=[] and listdifferentvaleur!=[]:
-        vq_vmixdiffCSV.writerow([" ".join(listdifferentcle)," ".join(listdifferentvaleur),cle]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
+        vq_vmixdiffCSV.writerow([cle," ".join(listdifferentcle)," ".join(listdifferentvaleur)]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
       if listememclev!=[] and listememvaleurv!=[]:
-        vq_vmixmemCSV.writerow([" ".join(listememclev)," ".join(listememvaleurv),cle])
+        vq_vmixmemCSV.writerow([cle," ".join(listememclev)," ".join(listememvaleurv)])
     vq_vmixdiff.close()
     vq_vmixmem.close()
     #os.popen(str(vdomain)+"Vq_Vmix_diff.csv") # activation de l'affichage direct
@@ -575,13 +582,13 @@ for vdomain in dictionnaire4:
     # ecrivons l'entete des sequences qui différent
   if not os.path.exists('VDJ_CSV'):
     os.makedirs('VDJ_CSV')
-  jvq_jmixdiff = open('VDJ_CSV'+'/'+str(vdomain)+"Jvq_Jmix_diff.csv", "wt")
-  jvq_jmixmem = open('VDJ_CSV'+'/'+str(vdomain)+"Jvq_Jmix_mem.csv", "wt")
+  jvq_jmixdiff = open('VDJ_CSV'+'/'+str(renommer(vdomain))+"Jvq_Jmix_diff.csv", "wt")
+  jvq_jmixmem = open('VDJ_CSV'+'/'+str(renommer(vdomain))+"Jvq_Jmix_mem.csv", "wt")
   jvq_jmixmemCSV = csv.writer(jvq_jmixmem,delimiter=";")
   jvq_jmixdiffCSV = csv.writer(jvq_jmixdiff,delimiter=";")
     
-  jvq_jmixdiffCSV.writerow(["J_VQUEST","J_MIXCR","SEQ_NUMBER"])
-  jvq_jmixmemCSV.writerow(["J_VQUEST","J_MIXCR","SEQ_NUMBER"])
+  jvq_jmixdiffCSV.writerow(["SEQ_NUMBER","J_VQUEST","J_MIXCR"])
+  jvq_jmixmemCSV.writerow(["SEQ_NUMBER","J_VQUEST","J_MIXCR"])
     ##############################################
 
     # nous essayerons de comparer les resultat des cle concordante et non concordante ici nous nous basons sur les recherches des J
@@ -645,10 +652,10 @@ for vdomain in dictionnaire4:
 #                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              print(valeur[1])
     if listdifferentclej!=[] and listdifferentvaleurj!=[]:
 #      
-       jvq_jmixdiffCSV.writerow([" ".join(listdifferentclej)," ".join(listdifferentvaleurj),cle]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
+       jvq_jmixdiffCSV.writerow([cle," ".join(listdifferentclej)," ".join(listdifferentvaleurj)]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
     if listememclej!=[] and listememvaleurj!=[]:
 #    
-       jvq_jmixmemCSV.writerow([" ".join(listememclej)," ".join(listememvaleurj),cle]) # ecrivons dans le fichier excel les valeurs qui sont les memes de jmixcr et jvquest
+       jvq_jmixmemCSV.writerow([cle," ".join(listememclej)," ".join(listememvaleurj)]) # ecrivons dans le fichier excel les valeurs qui sont les memes de jmixcr et jvquest
   jvq_jmixdiff.close()
   jvq_jmixmem.close()
   #os.popen(str(vdomain)+"Jvq_Jmix_diff.csv")
@@ -715,14 +722,14 @@ for vdomain in dictionnaire5:
   if not os.path.exists('VDJ_CSV'):
     os.makedirs('VDJ_CSV')
     # ecrivons l'entete des sequences qui différent  
-  dvq_dmixdiff = open('VDJ_CSV'+'/'+str(vdomain)+"Dvq_Dmix_diff.csv", "wt")
-  dvq_dmixmem = open('VDJ_CSV'+'/'+str(vdomain)+"Dvq_Dmix_mem.csv", "wt")
+  dvq_dmixdiff = open('VDJ_CSV'+'/'+str(renommer(vdomain))+"Dvq_Dmix_diff.csv", "wt")
+  dvq_dmixmem = open('VDJ_CSV'+'/'+str(renommer(vdomain))+"Dvq_Dmix_mem.csv", "wt")
   
   dvq_dmixdiffCSV = csv.writer(dvq_dmixdiff,delimiter=";")
   dvq_dmixmemCSV = csv.writer(dvq_dmixmem,delimiter=";")
     
-  dvq_dmixdiffCSV.writerow(["D_VQUEST","D_MIXCR","SEQ_NUMBER"])
-  dvq_dmixmemCSV.writerow(["D_VQUEST","D_MIXCR","SEQ_NUMBER"])
+  dvq_dmixdiffCSV.writerow(["SEQ_NUMBER","D_VQUEST","D_MIXCR"])
+  dvq_dmixmemCSV.writerow(["SEQ_NUMBER","D_VQUEST","D_MIXCR"])
     ##############################################
 
 #    os.popen(str(vdomain)+"vq_vmix.csv")
@@ -778,9 +785,9 @@ for vdomain in dictionnaire5:
     listetotalvd.append(v)  # listetotalv contiendra toutes les nombres  des D concordants de mixcr-vquest
     listetotaldicod.append(len(dicovaleurd))
     if listdifferentcled!=[] and listdifferentvaleurd!=[]:
-      dvq_dmixdiffCSV.writerow([" ".join(listdifferentcled)," ".join(listdifferentvaleurd),cle]) # ecrivons dans le fichier excel les valeurs qui sont differente de d mixcr et d vquest
+      dvq_dmixdiffCSV.writerow([cle," ".join(listdifferentcled)," ".join(listdifferentvaleurd)]) # ecrivons dans le fichier excel les valeurs qui sont differente de d mixcr et d vquest
     if listememcled!=[] and listememvaleurd!=[]:
-      dvq_dmixmemCSV.writerow([" ".join(listememcled)," ".join(listememvaleurd),cle]) # ecrivons dans le fichier excel les valeurs qui sont les memes de vmixcr et vquest
+      dvq_dmixmemCSV.writerow([cle," ".join(listememcled)," ".join(listememvaleurd)]) # ecrivons dans le fichier excel les valeurs qui sont les memes de vmixcr et vquest
   dvq_dmixdiff.close()
   dvq_dmixmem.close()
   #os.popen(str(vdomain)+"Dvq_Dmix_diff.csv")
@@ -839,14 +846,14 @@ for vdomain in dictionnaire1:
       os.makedirs('VDJ_CSV')
     
   # ecriture du fichier au format csv
-    productive = open('VDJ_CSV'+'/'+str(vdomain)+".csv", "wt")
+    productive = open('VDJ_CSV'+'/'+str(renommer(vdomain))+".csv", "wt")
     productivCSV = csv.writer(productive,delimiter=";")
     productivCSV.writerow([str(vdomain)+"nombre_sequence:          "+str(len(dictionnaire1[vdomain]))])
-    productivCSV.writerow(["V_MIXCR","J_MIXCR","C_MIXCR","D_MIXCR","N_SEQ"])
+    productivCSV.writerow(["N_SEQ","V_MIXCR","J_MIXCR","C_MIXCR","D_MIXCR"])
     
  
     for k in (dictionnaire1[vdomain]).keys():
-      productivCSV.writerow([str(k),str(dictionnaire1[vdomain][k][0]),str(dictionnaire1[vdomain][k][1]),str(dictionnaire1[vdomain][k][2]),str(dictionnaire1[vdomain][k][3])])
+      productivCSV.writerow([str(dictionnaire1[vdomain][k][3]),str(k),str(dictionnaire1[vdomain][k][0]),str(dictionnaire1[vdomain][k][1]),str(dictionnaire1[vdomain][k][2])])
    
       
       
