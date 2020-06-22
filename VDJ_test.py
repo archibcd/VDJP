@@ -95,16 +95,16 @@ try:
 
              # on met dans les deux cas les valeurs de vquest et mixcr dans notre dictionnaire (les j et les d) 
               
-              dictionnaire4[vdomain][jvquest] = jmixcr 
-              dictionnaire5[vdomain][dvquest] = dmixcr
+              dictionnaire4[vdomain][vseqnumber] = [jmixcr,jvquest] 
+              dictionnaire5[vdomain][vseqnumber] = [dmixcr,dvquest]
              
               
            if vdomain not in dictionnaire4 :          # si  le VDomain n'existe pas je le crée avec la valeur correspondan
              
             
-              dictionnaire4[vdomain]={jvquest:jmixcr}
+              dictionnaire4[vdomain]={vseqnumber:[jmixcr,jvquest]}
               
-              dictionnaire5[vdomain]={dvquest:dmixcr}
+              dictionnaire5[vdomain]={vseqnumber:[dmixcr,dvquest]}
               
             # dictionnaire1 qui acceuil les valeurs de VQUEST jcdv avec le numero de sequence nous recuperons les sequences avec au moins un v    
       #                
@@ -124,7 +124,7 @@ try:
               
               dictionnaire2[vdomain][vseqnumber] = vmixcr
               
-              dictionnaire3[vdomain][vseqvquest] = vmixcr
+              dictionnaire3[vdomain][vseqnumber] = [vmixcr,vseqvquest]
 
            elif vdomain not in dictionnaire :          # si  le VDomain n'existe pas je le crée avec la valeur correspondante
              
@@ -133,7 +133,7 @@ try:
               dictionnaire2[vdomain]={vseqnumber:vmixcr}
              
             
-              dictionnaire3[vdomain]={vseqvquest:vmixcr}
+              dictionnaire3[vdomain]={vseqnumber:[vmixcr,vseqvquest]}
 
     else:
       print("le fichier n'est pas un fichier de sortie du pipeline chargé un autre fichier svp...")
@@ -187,7 +187,7 @@ def affichage():
   fenetre.mainloop()
   
   
-affichage()
+#affichage()
 
 # Histogramme du VDomain
 # Histogramme du VDomain
@@ -203,7 +203,7 @@ def histogram():
   
   plt.title('Histogram Results VQuest', fontsize=10)
  
-  print("affichage de histogramme...cliquez ensuite sur fermer X pour continuer...")
+  print("sauvegarde de histogramme des VDomain fonctionnalité...dans VDJ_image...")
   
   if not os.path.exists('VDJ_image'):
     os.makedirs('VDJ_image')
@@ -232,7 +232,7 @@ def diagramcirculaire():
   
 
   
-  print("affichage de diagramme circulaire...cliquez ensuite sur fermer X pour continuer...")
+  print("sauvegarde du diagramme circulaire...des VDomain fonctionnalité... dans VDJ_image...")
   if not os.path.exists('VDJ_image'):
     os.makedirs('VDJ_image')
   plt.savefig('VDJ_image'+'/'+"circulaire.png")
@@ -407,14 +407,17 @@ histogram()
 
 donneconcord = []
 donnenonconcord =[]
-for vdomain in dictionnaire3:
 
+
+for vdomain in dictionnaire3:
+  
   if dictionnaire3[vdomain].values()!= '':
    
    
   
    
          #i=0
+    print("Affichage du nombre de sequences ceci en tenant compte des séquences avec des V non vide dans mixcr")
     print(str(vdomain)+"   A pour nombre de sortie de Séquences:    "+str(len(dictionnaire3[vdomain])))
   
     
@@ -424,18 +427,22 @@ for vdomain in dictionnaire3:
     vq_vmix = open('VDJ_CSV'+'/'+str(vdomain)+"vq_vmix.csv", "wt")
     vq_vmixCSV = csv.writer(vq_vmix,delimiter=";")
     vq_vmixCSV.writerow([str(vdomain)+"   nombre_sequence:          "+str(len(dictionnaire3[vdomain]))])
-    vq_vmixCSV.writerow(["V_VQUEST","V_MIXCR"])
+    vq_vmixCSV.writerow(["V_VQUEST","V_MIXCR","SEQ_NUMBER"])
 
     # ecrivons l'entete des sequences qui différent
     
                 
     vq_vmixdiff = open('VDJ_CSV'+'/'+str(vdomain)+"Vq_Vmix_diff.csv", "wt") # nous ouvrons le fichier qui contiendra les sequences non concordantes vquest mixcr
-    vq_vmixdiffCSV = csv.writer(vq_vmixdiff,delimiter=";")
+
+    vq_vmixmem = open('VDJ_CSV'+'/'+str(vdomain)+"Vq_Vmix_mem.csv", "wt")
     
-    vq_vmixdiffCSV.writerow(["V_VQUEST","V_MIXCR"])
+    vq_vmixdiffCSV = csv.writer(vq_vmixdiff,delimiter=";")
+    vq_vmixmemCSV = csv.writer(vq_vmixmem,delimiter=";")
+    vq_vmixdiffCSV.writerow(["V_VQUEST","V_MIXCR","SEQ_NUMBER"])
+    vq_vmixmemCSV.writerow(["V_VQUEST","V_MIXCR","SEQ_NUMBER"])
     ##############################################
-    for k in (dictionnaire3[vdomain]).keys():
-      vq_vmixCSV.writerow([str(k),str(dictionnaire3[vdomain][k])])
+    for cle,valeur in (dictionnaire3[vdomain]).items():
+      vq_vmixCSV.writerow([str(valeur[1]),str(valeur[0]),str(cle)])
       
       # ecriture du fichier de données dans un format pdf
            #pdf.cell(80,3,str(k),1)
@@ -448,7 +455,7 @@ for vdomain in dictionnaire3:
     vq_vmix.close() # ici nous fermons un fichier en fait ce fichier contient des sequences Vvquest et Vmixcr avec v mixcr au moins une donnée
     
     #os.popen(str(vdomain)+"Vq_Vmix.csv") # fonction pour l'ouverture directe du fichier csv
-    print("ecriture du fichier csv des v de vquest et mixc sans tenir compte de la difference")
+    print("ecriture du fichier csv des v de vquest et v mixc sans tenir compte de la difference consulter fichier Vq_Vmix.csv de VDJ_image")
     # nous essayerons de comparer les resultat des cle concordante et non concordante ici nous nous basons sur les recherches des V
     listetotalv=[]  # listetotalv contiendra toutes les nombres  des v concordants de mixcr-vquest
     listetotaldico=[]
@@ -458,22 +465,24 @@ for vdomain in dictionnaire3:
       
       listdifferentcle=[]
       listdifferentvaleur=[]
+      listememclev=[]
+      listememvaleurv=[]
       dicocle={}
       #cle=cle.lstrip("Homsap ")  # traitement sur l'homme uniquement clé vquest
       #clelist=cle.split(" or Homsap ") # decoupage sur l'homme uniquement
-      clelist= re.split("[ ,*]",cle)
+      clelist= re.split("[ ,*]",valeur[1])
       
 
       for elt in clelist:
         #a=elt.split('*') # 2eme decoupage par element sur* de l'homme 
-        if elt.startswith('I') or elt.startswith('T'):
+        if elt.startswith('I') or elt.startswith('T') or elt=='':
           dicocle[elt]=elt
           
       
       
       dicovaleur={}
 
-      valeurlist=valeur.split(",")
+      valeurlist=valeur[0].split(",")
 
       # traitement sur les valeur valeur de la cle du dictionnaire c'est à dire ceux de mixcr
       v=0
@@ -487,19 +496,27 @@ for vdomain in dictionnaire3:
           
           
           v=v+1
+          listememclev.append(valer)
         if valer not in dicovaleur:
           # offsider, juste pour recuperer les valeur pour construire les listes différentes de sequences non concordantes
           listdifferentcle.append(valer)
       for vale in dicovaleur:
+        if vale in dicocle:
+          listememvaleurv.append(vale)
         if vale not in dicocle:
           listdifferentvaleur.append(vale)
           
           
       listetotalv.append(v)  # listetotalv contiendra toutes les nombres  des v concordants de mixcr-vquest
       listetotaldico.append(len(dicovaleur))
-      vq_vmixdiffCSV.writerow([listdifferentcle,listdifferentvaleur]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
+      if listdifferentcle!=[] and listdifferentvaleur!=[]:
+        vq_vmixdiffCSV.writerow([" ".join(listdifferentcle)," ".join(listdifferentvaleur),cle]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
+      if listememclev!=[] and listememvaleurv!=[]:
+        vq_vmixmemCSV.writerow([" ".join(listememclev)," ".join(listememvaleurv),cle])
     vq_vmixdiff.close()
+    vq_vmixmem.close()
     #os.popen(str(vdomain)+"Vq_Vmix_diff.csv") # activation de l'affichage direct
+    print("ecriture du fichier Vq_Vmix_diff.csv qui tient compte uniquement de la difference des sequences V de mixcr et V de vquest")
     print("le fichier qui a été crée est le fichier des sequences de V de mixcr et de V vquest retrouvez celle-ci dans le dossier VDJ")
       # ecrivons dans un fichier les sequences qui seront aux résultats différents
       
@@ -528,7 +545,7 @@ def histogram2():               # histogramme des cas concordants et des cas non
   ax.legend(((ax.bar(range(len(countss)), countss, width))[0],(ax.bar(ind + width , countsss, width))[0]), ('concordant', 'NoConcordant'))
   
   plt.title('Histogram V Results Concordant & non concordants', fontsize=10)
-  print("affichage de histogramme...cet histogramme est consultable dans le dossier vdj_image..")
+  print("Sauvegarde de histogramme des V de VQUEST ET MIXCR...cet histogramme est consultable dans le dossier VDJ_image..")
   
   if not os.path.exists('VDJ_image'):
     os.makedirs('VDJ_image')
@@ -559,9 +576,12 @@ for vdomain in dictionnaire4:
   if not os.path.exists('VDJ_CSV'):
     os.makedirs('VDJ_CSV')
   jvq_jmixdiff = open('VDJ_CSV'+'/'+str(vdomain)+"Jvq_Jmix_diff.csv", "wt")
+  jvq_jmixmem = open('VDJ_CSV'+'/'+str(vdomain)+"Jvq_Jmix_mem.csv", "wt")
+  jvq_jmixmemCSV = csv.writer(jvq_jmixmem,delimiter=";")
   jvq_jmixdiffCSV = csv.writer(jvq_jmixdiff,delimiter=";")
     
-  jvq_jmixdiffCSV.writerow(["J_VQUEST","J_MIXCR"])
+  jvq_jmixdiffCSV.writerow(["J_VQUEST","J_MIXCR","SEQ_NUMBER"])
+  jvq_jmixmemCSV.writerow(["J_VQUEST","J_MIXCR","SEQ_NUMBER"])
     ##############################################
 
     # nous essayerons de comparer les resultat des cle concordante et non concordante ici nous nous basons sur les recherches des J
@@ -572,21 +592,23 @@ for vdomain in dictionnaire4:
       
     listdifferentclej=[]
     listdifferentvaleurj=[]
+    listememclej=[]
+    listememvaleurj=[]
     dicoclej={}
      
-    clelistj= re.split("[ ,*]",cle)    # decoupage des cles des j vquest
+    clelistj= re.split("[ ,*]",valeur[1])    # decoupage des cles des j vquest
       
 
     for elt in clelistj:
        
-      if elt.startswith('I') or elt.startswith('T'):
+      if elt.startswith('I') or elt.startswith('T')or elt=='':
         dicoclej[elt]=elt
           
      # ce dictionnaire contient toutes nos valeurs J de vquest
       
     dicovaleurj={}
 
-    valeurlistj=valeur.split(",")
+    valeurlistj=valeur[0].split(",")
 
       # traitement sur les valeur valeur de la cle du dictionnaire c'est à dire ceux de mixcr
     v=0
@@ -596,23 +618,41 @@ for vdomain in dictionnaire4:
       dicovaleurj[c[0]]=c[0]
     
     for valer in dicoclej:
-      if valer in dicovaleurj: # ici c'est pour traiter les valeurs pour construire l'histogramme2
-          
-        
-        v=v+1
+      print("les valeurs sont les suivantes:",valer)
+#      # ici c'est pour traiter les valeurs pour construire l'histogramme2
+      for valerr in dicovaleurj:
+        if valer==valerr:
+          print("les valeurs concordantes sont les suivantes:",valer)
+          v=v+1
+          listememclej.append(valer)
+#       
+#        
       if valer not in dicovaleurj:
           # offsider, juste pour recuperer les valeur pour construire les listes différentes de sequences non concordantes
         listdifferentclej.append(valer)
     for vale in dicovaleurj:
+#     
+      for vales in dicoclej:
+        if vale==vales:
+          listememvaleurj.append(vale)
+#        
       if vale not in dicoclej:
         listdifferentvaleurj.append(vale)
           
           
-    listetotalvj.append(v)  # listetotalv contiendra toutes les nombres  des v concordants de mixcr-vquest
+    listetotalvj.append(v)  # listetotalv contiendra tous les nombres  des j concordants de mixcr-vquest
     listetotaldicoj.append(len(dicovaleurj))
-    jvq_jmixdiffCSV.writerow([listdifferentclej,listdifferentvaleurj]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
+#                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              print(valeur[1])
+    if listdifferentclej!=[] and listdifferentvaleurj!=[]:
+#      
+       jvq_jmixdiffCSV.writerow([" ".join(listdifferentclej)," ".join(listdifferentvaleurj),cle]) # ecrivons dans le fichier excel les valeurs qui sont differente de vmixcr et vquest
+    if listememclej!=[] and listememvaleurj!=[]:
+#    
+       jvq_jmixmemCSV.writerow([" ".join(listememclej)," ".join(listememvaleurj),cle]) # ecrivons dans le fichier excel les valeurs qui sont les memes de jmixcr et jvquest
   jvq_jmixdiff.close()
+  jvq_jmixmem.close()
   #os.popen(str(vdomain)+"Jvq_Jmix_diff.csv")
+  print("ecriture du fichier Jq_Jmix_diff.csv qui tient compte uniquement de la difference des sequences J de mixcr et J de vquest")
   print("le fichier qui a été crée est le fichier des sequences des J de mixcr avec détails retrouvez celle-ci dans le dossier VDJ")
       # ecrivons dans un fichier les sequences qui seront aux résultats différents
       
@@ -676,9 +716,13 @@ for vdomain in dictionnaire5:
     os.makedirs('VDJ_CSV')
     # ecrivons l'entete des sequences qui différent  
   dvq_dmixdiff = open('VDJ_CSV'+'/'+str(vdomain)+"Dvq_Dmix_diff.csv", "wt")
+  dvq_dmixmem = open('VDJ_CSV'+'/'+str(vdomain)+"Dvq_Dmix_mem.csv", "wt")
+  
   dvq_dmixdiffCSV = csv.writer(dvq_dmixdiff,delimiter=";")
+  dvq_dmixmemCSV = csv.writer(dvq_dmixmem,delimiter=";")
     
-  dvq_dmixdiffCSV.writerow(["D_VQUEST","D_MIXCR"])
+  dvq_dmixdiffCSV.writerow(["D_VQUEST","D_MIXCR","SEQ_NUMBER"])
+  dvq_dmixmemCSV.writerow(["D_VQUEST","D_MIXCR","SEQ_NUMBER"])
     ##############################################
 
 #    os.popen(str(vdomain)+"vq_vmix.csv")
@@ -690,21 +734,23 @@ for vdomain in dictionnaire5:
       
     listdifferentcled=[]
     listdifferentvaleurd=[]
+    listememcled=[]
+    listememvaleurd=[]
     dicocled={}
       
-    clelistd= re.split("[ ,*]",cle)    # decoupage des cles des d vquest
+    clelistd= re.split("[ ,*]",valeur[1])    # decoupage des cles des d vquest
       
 
     for elt in clelistd:
         #a=elt.split('*') # 2eme decoupage par element sur* de l'homme 
-      if elt.startswith('I') or elt.startswith('T'):
-        dicoclej[elt]=elt
+      if elt.startswith('I') or elt.startswith('T')or elt=='':
+        dicocled[elt]=elt
           
 
       
     dicovaleurd={}
 
-    valeurlistd=valeur.split(",")
+    valeurlistd=valeur[0].split(",")
 
       # traitement sur les valeur valeur de la cle du dictionnaire c'est à dire ceux de mixcr
     v=0
@@ -718,34 +764,41 @@ for vdomain in dictionnaire5:
           
       
         v=v+1
+        listememcled.append(valer)
       if valer not in dicovaleurd:
           # offsider, juste pour recuperer les valeur pour construire les listes différentes de sequences non concordantes
         listdifferentcled.append(valer)
     for vale in dicovaleurd:
+      if vale in dicocled:
+        listememvaleurd.append(vale)
       if vale not in dicocled:
         listdifferentvaleurd.append(vale)
           
           
     listetotalvd.append(v)  # listetotalv contiendra toutes les nombres  des D concordants de mixcr-vquest
     listetotaldicod.append(len(dicovaleurd))
-    dvq_dmixdiffCSV.writerow([listdifferentcled,listdifferentvaleurd]) # ecrivons dans le fichier excel les valeurs qui sont differente de d mixcr et d vquest
+    if listdifferentcled!=[] and listdifferentvaleurd!=[]:
+      dvq_dmixdiffCSV.writerow([" ".join(listdifferentcled)," ".join(listdifferentvaleurd),cle]) # ecrivons dans le fichier excel les valeurs qui sont differente de d mixcr et d vquest
+    if listememcled!=[] and listememvaleurd!=[]:
+      dvq_dmixmemCSV.writerow([" ".join(listememcled)," ".join(listememvaleurd),cle]) # ecrivons dans le fichier excel les valeurs qui sont les memes de vmixcr et vquest
   dvq_dmixdiff.close()
+  dvq_dmixmem.close()
   #os.popen(str(vdomain)+"Dvq_Dmix_diff.csv")
   print("le fichier qui a été crée est le fichier des sequences D de vquest et mixcr uniquement")
-      # ecrivons dans un fichier les sequences qui seront aux résultats différents
+     
       
   totalconcordmixcrd=sum(listetotalvd)
   totaldemixcrd=sum(listetotaldicod)
   totalnonconcordmixcrd=totaldemixcrd-totalconcordmixcrd
   donneconcordd.append((vdomain,totalconcordmixcrd))
   donnenonconcordd.append((vdomain,totalnonconcordmixcrd))
-      # ecriture des sequences qui ne sont pas les memes dans vquest et mixcr
+      
 
 
       
       
     
-def histogramd():               # histogramme des cas concordants et des cas non concordants de V
+def histogramd():               # histogramme des cas concordants et des cas non concordants de d
   
   fig, ax = plt.subplots(1,1)
   vdcc, countssss= zip(*donneconcordd)

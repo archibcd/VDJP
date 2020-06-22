@@ -120,22 +120,54 @@ par type de fonction du vdomain vu par mixcr   (No results, productive , unprodu
 	NB: vous devez fermer la fenêtre graphique pour continuer l'exécution du programme verifier qu'il n'y a
 		plus de fenêtre active. Dans le cas contraire, le programme ne continuera pas l'exécution. 
 																																				 
-		message3:  "affichage de l'histogramme... cliquez ensuite sur fermer X pour continuer"
+		message3:  "sauvegarde de l'histogramme...des VDomain fonctionnalité dans VDJ_image"
 
-3-     Affichage de l'histogramme
-	 a- à la suite de la fermeture de la fenêtre des statistiques il est immédiatement affiché la fenêtre de
-	Consultation de l'histogramme. Vous pouvez choisir de l'enregistrer avec l'icône tout  en bas de l'image.
-	vous avez tout à côté un boutton à 4 flèches vertes (configure subplot ) qui vous permettra de modifier les
-	paramètres d'affichage de l'histogramme 
-	N. B. Enregistrez l'image en PNG et n'oubliez pas de fermer la fenêtre pour continuer
+3-     Sauvegarde de l'histogramme
+	 a- à la suite de la fermeture de la fenêtre des statistiques il est immédiatement sauvegardé l'image de l'histogramme dans VDJ_image 
+	 
+
                                                                                                                                    
-        message4:  "affichage du diagramme circulaire."
+         message4:  "sauvegarde du diagramme circulaire... des VDomain fonctionnalité... dans VDJ_image..."
                                                                                                             
-4-   Affichage du diagramme circulaire 
-     a- à la fermeture de la fenêtre de l'histogramme tout comme cette dernière, il est affiché directement un 
-     diagramme circulaire avec les mêmes options de visualisation le (configure subplot ) et le boutton d'enregistrement
+4-   Saouvegarde du diagramme circulaire 
+     a- Il est sauvegardé directement un diagramme circulaire 
                                                                                                        
-                                           
+ 5-   Affichage du nombre de séquences ceci en tenant compte des séquences avec des V non vide dans mixcr
+
+     a- nous affichons ici pour chaque fonctionnalité du VDomain le nombre de (rearrangement found, unproductive, no results...) 
+     Message:5    <<no rearrangement found  a pour nombre de sorties de séquences: 5273>>
+     b- nous écrivons dans le fichier adéquat, c'est-à-dire le fichier << V de VQUEST et V de mixcr (vq_vmix.csv)>>
+     Message:6    <<écriture du fichier cSv de v de vquest et mixcr sans tenir compte de la différence>>
+     c- nous écrivons également un fichier Vq_Vmix_diff.csv qui tient compte de la différence des V de mixcr et V de vquest
+
+                    << ecriture du fichier Vq_Vmix_diff.csv qui tient compte uniquement de la difference des sequences V de mixcr et V de vquest>>
+
+     d- nous écrivons également un fichier Jq_Jmix_diff.csv qui tient compte de la différence des J de mixcr et J de vquest
+
+                    <<ecriture du fichier Jq_Jmix_diff.csv qui tient compte uniquement de la difference des sequences J de mixcr et J de vquest>>
+
+    
+     e- nous écrivons également un fichier Dq_Jmix_diff.csv qui tient compte de la différence des D de mixcr et D de vquest
+
+                    <<ecriture du fichier Dq_Dmix_diff.csv qui tient compte uniquement de la difference des sequences D de mixcr et D de vquest>> 
+
+     Message:7    <<le fichier qui a été créé est le fichier des séquences de V de mixcr et de vquest, retrouver celui dans le dossier VDJ_CSV>>
+ 
+6-   Affichage de l'histogramme des nombres des séquences tenant compte de la fonctionnalité du VDomain
+     
+     a- il s'agit ici de sauvegarder dans un histogramme par rapport au domaine V les quantités dans le pipeline des sequences concordantes et les sequences non concordantes
+     Message:8   <<sauvegarde  de l'histogramme des V de VQUEST ET MIXCR... cet histogramme est consultable dans le dossier VDJ_image>>
+     b- il s'agit ici de sauvegarder dans un histogramme par rapport au domaine D les quantités dans le pipeline des sequences concordantes et les sequences non concordantes
+     Message:9   << sauvegarde de l'histogramme des D de VQUEST et MIXCR... cet histogramme est consultable dans le dossier VDJ_image>>
+     c- il s'agit ici de sauvegarder dans un histogramme par rapport au domaine J les quantités dans le pipeline des séquences concordantes et les séquences non concordantes
+     Message:10   <<sauvegarde de l'histogramme des J de MIXCR et VQUEST... cet histogramme est consultable dans le dossier VDJ_image>>
+
+7-   Affichage du nombre de sorties des séquences V de mixcr en tenant compte uniquement des V non vide sorti (VDJC de mixcr et numéro de la séquence) 
+     Message: 11  <<NO Results a pour sortie de séquence 3223>>
+
+8-   Creation d'un fichier CSV des séquences VDJC ET Numero séquence de mixcr des séquences vdjc qui n'ont pas de résultat dans vquest
+     Message: 12 << le fichier qui a été créé est le fichier des séquences des V de mixcr avec détails retrouver celui-ci dans le dossier VDJ_CSV  
+                                          
 
                         
 
